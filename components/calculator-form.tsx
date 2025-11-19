@@ -4,6 +4,9 @@ import { useState } from "react"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import { Info } from "lucide-react"
 import { LoanInputs } from "@/lib/calculations"
 
 interface CalculatorFormProps {
@@ -19,6 +22,7 @@ export function CalculatorForm({ onInputsChange }: CalculatorFormProps) {
   })
 
   const [errors, setErrors] = useState<Record<string, string>>({})
+  const [noteExpanded, setNoteExpanded] = useState<string | undefined>(undefined)
 
   const handleInputChange = (field: keyof LoanInputs, value: string) => {
     const numValue = parseFloat(value) || 0
@@ -41,19 +45,36 @@ export function CalculatorForm({ onInputsChange }: CalculatorFormProps) {
   }
 
   return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle>Loan Details</CardTitle>
-        <CardDescription>
-          Enter your current vehicle loan information to calculate payoff scenarios
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-6">
+    <TooltipProvider delayDuration={200}>
+      <Card className="w-full">
+        <CardHeader>
+          <CardTitle>Loan Details</CardTitle>
+          <CardDescription>
+            Enter your current vehicle loan information to calculate payoff scenarios
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-6">
         <div className="space-y-2">
-          <Label htmlFor="remainingBalance">
-            Remaining Loan Balance
-            <span className="text-red-500 ml-1">*</span>
-          </Label>
+          <div className="flex items-center gap-2">
+            <Label htmlFor="remainingBalance">
+              Remaining Loan Balance
+              <span className="text-red-500 ml-1">*</span>
+            </Label>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  type="button"
+                  className="text-gray-400 hover:text-gray-600"
+                  aria-label="Information about remaining loan balance"
+                >
+                  <Info className="h-4 w-4" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p id="remainingBalance-desc">Total principal remaining on your current vehicle loan</p>
+              </TooltipContent>
+            </Tooltip>
+          </div>
           <div className="relative">
             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
             <Input
@@ -68,19 +89,32 @@ export function CalculatorForm({ onInputsChange }: CalculatorFormProps) {
               aria-describedby="remainingBalance-desc"
             />
           </div>
-          <p id="remainingBalance-desc" className="text-sm text-gray-500">
-            Total principal remaining on your current vehicle loan
-          </p>
           {errors.remainingBalance && (
             <p className="text-sm text-red-500">{errors.remainingBalance}</p>
           )}
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="vehicleValue">
-            Vehicle Estimated Value
-            <span className="text-red-500 ml-1">*</span>
-          </Label>
+          <div className="flex items-center gap-2">
+            <Label htmlFor="vehicleValue">
+              Vehicle Estimated Value
+              <span className="text-red-500 ml-1">*</span>
+            </Label>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  type="button"
+                  className="text-gray-400 hover:text-gray-600"
+                  aria-label="Information about vehicle estimated value"
+                >
+                  <Info className="h-4 w-4" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p id="vehicleValue-desc">Current trade-in or private sale value of your vehicle</p>
+              </TooltipContent>
+            </Tooltip>
+          </div>
           <div className="relative">
             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
             <Input
@@ -95,19 +129,32 @@ export function CalculatorForm({ onInputsChange }: CalculatorFormProps) {
               aria-describedby="vehicleValue-desc"
             />
           </div>
-          <p id="vehicleValue-desc" className="text-sm text-gray-500">
-            Current trade-in or private sale value of your vehicle
-          </p>
           {errors.vehicleValue && (
             <p className="text-sm text-red-500">{errors.vehicleValue}</p>
           )}
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="currentMonthlyPayment">
-            Current Monthly Payment
-            <span className="text-red-500 ml-1">*</span>
-          </Label>
+          <div className="flex items-center gap-2">
+            <Label htmlFor="currentMonthlyPayment">
+              Current Monthly Payment
+              <span className="text-red-500 ml-1">*</span>
+            </Label>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  type="button"
+                  className="text-gray-400 hover:text-gray-600"
+                  aria-label="Information about current monthly payment"
+                >
+                  <Info className="h-4 w-4" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p id="currentMonthlyPayment-desc">Your existing loan payment that covers interest and principal</p>
+              </TooltipContent>
+            </Tooltip>
+          </div>
           <div className="relative">
             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
             <Input
@@ -122,19 +169,32 @@ export function CalculatorForm({ onInputsChange }: CalculatorFormProps) {
               aria-describedby="currentMonthlyPayment-desc"
             />
           </div>
-          <p id="currentMonthlyPayment-desc" className="text-sm text-gray-500">
-            Your existing loan payment that covers interest and principal
-          </p>
           {errors.currentMonthlyPayment && (
             <p className="text-sm text-red-500">{errors.currentMonthlyPayment}</p>
           )}
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="annualInterestRate">
-            Annual Interest Rate
-            <span className="text-red-500 ml-1">*</span>
-          </Label>
+          <div className="flex items-center gap-2">
+            <Label htmlFor="annualInterestRate">
+              Annual Interest Rate
+              <span className="text-red-500 ml-1">*</span>
+            </Label>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  type="button"
+                  className="text-gray-400 hover:text-gray-600"
+                  aria-label="Information about annual interest rate"
+                >
+                  <Info className="h-4 w-4" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p id="annualInterestRate-desc">Annual interest rate on your current loan (required for accurate calculations)</p>
+              </TooltipContent>
+            </Tooltip>
+          </div>
           <div className="relative">
             <Input
               id="annualInterestRate"
@@ -150,25 +210,19 @@ export function CalculatorForm({ onInputsChange }: CalculatorFormProps) {
             />
             <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">%</span>
           </div>
-          <p id="annualInterestRate-desc" className="text-sm text-gray-500">
-            Annual interest rate on your current loan (required for accurate calculations)
-          </p>
           {errors.annualInterestRate && (
             <p className="text-sm text-red-500">{errors.annualInterestRate}</p>
           )}
         </div>
 
-        <div className="pt-4 border-t">
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <p className="text-sm text-blue-900">
-              <strong>Note:</strong> These calculations use standard loan amortization formulas
-              and assume extra payments are applied directly to principal. Actual results may vary
-              based on your lender's specific terms and conditions.
-            </p>
-          </div>
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-900">
+          <p>
+            <strong>Note:</strong> These calculations use standard loan amortization formulas and{!noteExpanded && "..."}{!noteExpanded && " "}{!noteExpanded && <a onClick={() => setNoteExpanded("note")} className="text-blue-700 hover:text-blue-900 cursor-pointer whitespace-nowrap">[more]</a>}{noteExpanded && " assume extra payments are applied directly to principal. Actual results may vary based on your lender's specific terms and conditions. "}{noteExpanded && <a onClick={() => setNoteExpanded(undefined)} className="text-blue-700 hover:text-blue-900 cursor-pointer whitespace-nowrap">[less]</a>}
+          </p>
         </div>
       </CardContent>
     </Card>
+    </TooltipProvider>
   )
 }
 
