@@ -1,0 +1,32 @@
+{
+  "name": "car-load-widget",
+  "version": "1.0.0",
+  "description": "Proof of concept for a widget that helps me visualize my options based on variable inputs.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chadbercea/car-load-widget.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chadbercea/car-load-widget/issues"
+  },
+  "homepage": "https://github.com/chadbercea/car-load-widget#readme",
+  "dependencies": {
+    "@types/node": "^24.10.1",
+    "@types/react": "^19.2.6",
+    "@types/react-dom": "^19.2.3",
+    "autoprefixer": "^10.4.22",
+    "next": "^16.0.3",
+    "postcss": "^8.5.6",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "tailwindcss": "^4.1.17",
+    "typescript": "^5.9.3"
+  }
+}
