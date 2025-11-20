@@ -30,24 +30,26 @@ export default function Home() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
-          <div className="lg:col-span-1">
-            <CalculatorForm onInputsChange={setInputs} />
+        <div className="space-y-8 mb-8">
+          {negativeEquity > 0 && (
+            <PayoffGraph scenarios={scenarios} inputs={inputs} />
+          )}
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-1">
+              <CalculatorForm onInputsChange={setInputs} />
+            </div>
+
+            <div className="lg:col-span-2">
+              <ResultsTable scenarios={scenarios} negativeEquity={negativeEquity} />
+            </div>
           </div>
 
-          <div className="lg:col-span-2 space-y-8">
-            <ResultsTable scenarios={scenarios} negativeEquity={negativeEquity} />
-            
-            {negativeEquity > 0 && (
-              <>
-                <PayoffGraph scenarios={scenarios} inputs={inputs} />
-                
-                <div className="flex justify-center">
-                  <ExportButton scenarios={scenarios} inputs={inputs} />
-                </div>
-              </>
-            )}
-          </div>
+          {negativeEquity > 0 && (
+            <div className="flex justify-center">
+              <ExportButton scenarios={scenarios} inputs={inputs} />
+            </div>
+          )}
         </div>
 
         <footer className="mt-12 text-center text-sm text-gray-500 border-t pt-8">

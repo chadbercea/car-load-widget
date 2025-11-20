@@ -58,15 +58,25 @@ export function PayoffGraph({ scenarios, inputs }: PayoffGraphProps) {
   }
 
   const lineColors = {
-    '6mo': '#ef4444',    // red
-    '12mo': '#f59e0b',   // yellow/orange
-    '18mo': '#10b981',   // green
-    '24mo': '#3b82f6',   // blue
+    '6mo': '#10b981',    // green
+    '12mo': '#eab308',   // yellow
+    '18mo': '#f97316',   // orange
+    '24mo': '#ef4444',   // red
   }
 
   if (scenarios.length === 0 || scenarios[0].negativeEquity === 0) {
     return null
   }
+
+  // Calculate ticks for square grid cells
+  const maxValue = scenarios[0].negativeEquity
+  
+  // X-axis: 6 intervals (0, 4, 8, 12, 16, 20, 24)
+  const xAxisTicks = [0, 4, 8, 12, 16, 20, 24]
+  
+  // Y-axis: match X-axis intervals with 2000 increments
+  const yTickInterval = 2000
+  const yAxisTicks = [0, 2000, 4000, 6000, 8000, 10000, 12000]
 
   return (
     <Card className="w-full">
@@ -80,20 +90,24 @@ export function PayoffGraph({ scenarios, inputs }: PayoffGraphProps) {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="w-full h-[400px]">
+        <div className="w-full aspect-[2/1]">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart
               data={graphData}
               margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
             >
-              <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+              <CartesianGrid strokeDasharray="3 3" stroke="#d1d5db" opacity={0.3} />
               <XAxis 
-                dataKey="month" 
+                dataKey="month"
+                ticks={xAxisTicks}
+                domain={[0, 24]}
                 label={{ value: 'Months', position: 'insideBottom', offset: -5 }}
                 stroke="#6b7280"
               />
               <YAxis 
-                label={{ value: 'Remaining Balance', angle: -90, position: 'insideLeft' }}
+                ticks={yAxisTicks}
+                domain={[0, 12000]}
+                label={{ value: 'Remaining Balance', angle: -90, position: 'left', offset: 15, style: { textAnchor: 'middle' } }}
                 tickFormatter={formatCurrency}
                 stroke="#6b7280"
               />
