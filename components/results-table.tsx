@@ -9,8 +9,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 import { PayoffScenario, formatCurrency } from "@/lib/calculations"
-import { AlertCircle, CheckCircle2, TrendingDown } from "lucide-react"
+import { CheckCircle2, TrendingDown, Info } from "lucide-react"
 
 interface ResultsTableProps {
   scenarios: PayoffScenario[]
@@ -41,114 +47,94 @@ export function ResultsTable({ scenarios, negativeEquity }: ResultsTableProps) {
     )
   }
 
-  const getRowColor = (timeline: number) => {
-    if (timeline <= 6) return "bg-red-50 hover:bg-red-100"
-    if (timeline <= 12) return "bg-yellow-50 hover:bg-yellow-100"
-    return "bg-green-50 hover:bg-green-100"
+  const getChipColor = (timeline: number) => {
+    if (timeline <= 6) return "bg-green-100 text-green-800 border-green-300"
+    if (timeline <= 12) return "bg-orange-100 text-orange-800 border-orange-300"
+    return "bg-red-100 text-red-800 border-red-300"
+  }
+
+  const getStrategyLabel = (timeline: number) => {
+    if (timeline <= 6) return "Aggressive"
+    if (timeline <= 12) return "Moderate"
+    return "Conservative"
   }
 
   return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <TrendingDown className="h-6 w-6" />
-          Payoff Scenarios
-        </CardTitle>
-        <CardDescription>
-          Compare different timelines to eliminate your negative equity of{" "}
-          <span className="font-semibold text-red-600">{formatCurrency(negativeEquity)}</span>
-        </CardDescription>
-      </CardHeader>
+    <TooltipProvider>
+      <Card className="w-full">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <TrendingDown className="h-6 w-6" />
+            Payoff Scenarios
+            <Tooltip delayDuration={200}>
+              <TooltipTrigger asChild>
+                <button
+                  type="button"
+                  className="inline-flex items-center justify-center text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 rounded"
+                  aria-label="How to use these numbers"
+                >
+                  <Info className="h-5 w-5" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent style={{ zIndex: 9999, backgroundColor: 'white', borderColor: '#e5e7eb' }}>
+                <p className="font-semibold mb-2">How to use these numbers:</p>
+                <ul className="list-disc list-inside space-y-1 text-sm">
+                  <li><strong>Extra Payment:</strong> Additional amount beyond your current monthly payment</li>
+                  <li><strong>Total Monthly:</strong> What you'll actually pay each month (current + extra)</li>
+                  <li><strong>Total Paid:</strong> Total amount you'll pay over the entire timeline</li>
+                  <li><strong>Interest:</strong> Additional cost due to loan interest on the negative equity</li>
+                </ul>
+              </TooltipContent>
+            </Tooltip>
+          </CardTitle>
+          <CardDescription>
+            Compare different timelines to eliminate your negative equity of{" "}
+            <span className="font-semibold text-red-600">{formatCurrency(negativeEquity)}</span>
+          </CardDescription>
+        </CardHeader>
       <CardContent>
         <div className="rounded-md border overflow-hidden">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[100px]">Timeline</TableHead>
-                <TableHead className="text-right">Extra Payment</TableHead>
-                <TableHead className="text-right">Total Monthly</TableHead>
-                <TableHead className="text-right">Total Paid</TableHead>
-                <TableHead className="text-right">Interest</TableHead>
-                <TableHead>Strategy</TableHead>
+                <TableHead className="whitespace-nowrap">Timeline</TableHead>
+                <TableHead className="text-right whitespace-nowrap">Extra Payment</TableHead>
+                <TableHead className="text-right whitespace-nowrap">Total Monthly</TableHead>
+                <TableHead className="text-right whitespace-nowrap">Total Paid</TableHead>
+                <TableHead className="text-right whitespace-nowrap">Interest</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {scenarios.map((scenario) => (
-                <TableRow key={scenario.timeline} className={getRowColor(scenario.timeline)}>
-                  <TableCell className="font-medium">
-                    {scenario.timeline} {scenario.timeline === 1 ? 'month' : 'months'}
+                <TableRow key={scenario.timeline}>
+                  <TableCell className="whitespace-nowrap">
+                    <div className="flex items-center gap-2">
+                      <span className="font-semibold">{scenario.timeline} months</span>
+                      <span className={`px-2 py-0.5 text-xs font-medium rounded-full border ${getChipColor(scenario.timeline)}`}>
+                        {getStrategyLabel(scenario.timeline)}
+                      </span>
+                    </div>
                   </TableCell>
-                  <TableCell className="text-right font-semibold">
+                  <TableCell className="text-right font-semibold whitespace-nowrap">
                     {formatCurrency(scenario.extraMonthlyPayment)}
                   </TableCell>
-                  <TableCell className="text-right font-semibold text-lg">
+                  <TableCell className="text-right font-semibold whitespace-nowrap">
                     {formatCurrency(scenario.totalMonthlyPayment)}
                   </TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="text-right font-semibold whitespace-nowrap">
                     {formatCurrency(scenario.totalPaid)}
                   </TableCell>
-                  <TableCell className="text-right text-sm text-gray-600">
+                  <TableCell className="text-right font-semibold whitespace-nowrap">
                     {formatCurrency(scenario.totalInterestPaid)}
-                  </TableCell>
-                  <TableCell className="text-sm">
-                    {scenario.note}
                   </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </div>
-
-        <div className="mt-6 space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-              <div className="flex items-center gap-2 mb-2">
-                <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                <span className="font-semibold text-red-900">Aggressive (6 months)</span>
-              </div>
-              <p className="text-sm text-red-800">
-                Highest monthly payment but fastest payoff with least interest
-              </p>
-            </div>
-
-            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-              <div className="flex items-center gap-2 mb-2">
-                <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                <span className="font-semibold text-yellow-900">Moderate (12 months)</span>
-              </div>
-              <p className="text-sm text-yellow-800">
-                Balanced approach with manageable monthly payments
-              </p>
-            </div>
-
-            <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-              <div className="flex items-center gap-2 mb-2">
-                <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                <span className="font-semibold text-green-900">Conservative (18-24 months)</span>
-              </div>
-              <p className="text-sm text-green-800">
-                Lower monthly burden but more interest paid over time
-              </p>
-            </div>
-          </div>
-
-          <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-            <div className="flex items-start gap-2">
-              <AlertCircle className="h-5 w-5 text-gray-600 mt-0.5 flex-shrink-0" />
-              <div className="text-sm text-gray-700">
-                <p className="font-semibold mb-1">How to use these numbers:</p>
-                <ul className="list-disc list-inside space-y-1 ml-2">
-                  <li><strong>Extra Payment:</strong> Additional amount beyond your current monthly payment</li>
-                  <li><strong>Total Monthly:</strong> What you'll actually pay each month (current + extra)</li>
-                  <li><strong>Total Paid:</strong> Total amount you'll pay over the entire timeline</li>
-                  <li><strong>Interest:</strong> Additional cost due to loan interest on the negative equity</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
       </CardContent>
     </Card>
+    </TooltipProvider>
   )
 }
 

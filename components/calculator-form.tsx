@@ -70,7 +70,7 @@ export function CalculatorForm({ onInputsChange }: CalculatorFormProps) {
                   <Info className="h-4 w-4" />
                 </button>
               </TooltipTrigger>
-              <TooltipContent>
+              <TooltipContent style={{ zIndex: 9999, backgroundColor: 'white', borderColor: '#e5e7eb' }}>
                 <p id="remainingBalance-desc">Total principal remaining on your current vehicle loan</p>
               </TooltipContent>
             </Tooltip>
@@ -110,7 +110,7 @@ export function CalculatorForm({ onInputsChange }: CalculatorFormProps) {
                   <Info className="h-4 w-4" />
                 </button>
               </TooltipTrigger>
-              <TooltipContent>
+              <TooltipContent style={{ zIndex: 9999, backgroundColor: 'white', borderColor: '#e5e7eb' }}>
                 <p id="vehicleValue-desc">Current trade-in or private sale value of your vehicle</p>
               </TooltipContent>
             </Tooltip>
@@ -150,7 +150,7 @@ export function CalculatorForm({ onInputsChange }: CalculatorFormProps) {
                   <Info className="h-4 w-4" />
                 </button>
               </TooltipTrigger>
-              <TooltipContent>
+              <TooltipContent style={{ zIndex: 9999, backgroundColor: 'white', borderColor: '#e5e7eb' }}>
                 <p id="currentMonthlyPayment-desc">Your existing loan payment that covers interest and principal</p>
               </TooltipContent>
             </Tooltip>
@@ -190,7 +190,7 @@ export function CalculatorForm({ onInputsChange }: CalculatorFormProps) {
                   <Info className="h-4 w-4" />
                 </button>
               </TooltipTrigger>
-              <TooltipContent>
+              <TooltipContent style={{ zIndex: 9999, backgroundColor: 'white', borderColor: '#e5e7eb' }}>
                 <p id="annualInterestRate-desc">Annual interest rate on your current loan (required for accurate calculations)</p>
               </TooltipContent>
             </Tooltip>
